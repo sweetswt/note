@@ -93,7 +93,9 @@ draw()
 - 2、`strokeRect(x, y, width, height)`：绘制一个矩形的边框。
 - 3、`clearRect(x, y, width, height)`：清除指定的矩形区域，然后这块区域会变的完全透明。
 
-**说明：**这 3 个方法具有相同的参数。
+**说明：**
+
+这 3 个方法具有相同的参数。
 
 - **x, y**：指的是矩形的左上角的坐标。(相对于canvas的坐标原点)
 - **width, height**：指的是绘制的矩形的宽和高。
@@ -221,7 +223,7 @@ function draw(){
 
 1、`arc(x, y, r, startAngle, endAngle, anticlockwise)`: 以`(x, y)` 为圆心，以`r` 为半径，从 `startAngle` 弧度开始到`endAngle`弧度结束。`anticlosewise` 是布尔值，`true` 表示逆时针，`false` 表示顺时针(默认是顺时针)。
 
-注意：
+**注意：**
 
 - 这里的度数都是弧度。
 - `0` 弧度是指的 `x` 轴正方向。
@@ -735,5 +737,293 @@ drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
 
 每一次调用 `restore()`方法，上一个保存的状态就从栈中弹出，所有设定都恢复，类似数组的 `pop()`。
 
+```javascript
+    function draw() {
+        let canvas = document.getElementById('my-canvas');
+        if (!canvas.getContext) return;
+        let ctx = canvas.getContext("2d");
+        ctx.fillRect(0,0,300,300)
+        ctx.save() // 保存默认的颜色配置 #000000
+        ctx.fillStyle="pink";
+        ctx.fillRect(50,50,200,200)
+        ctx.restore() // 这一步从栈中取出了之前保存的默认配置 fillStyle="#000000" 
+        ctx.fillRect(100,100,100,100)
+    }
+    draw();
+```
 
 
+
+![](image/saveAndRestore.png)
+
+## 变形
+
+### `translate(x,y)`
+
+`translate(x,y)`用来移动`canvas`的**原点**到指定位置，`translate`方法接收两个参数：
+
+1. `x`是左右偏移量
+2. `y`是上下偏移量
+
+![](image/translate.png)
+
+**注意：** `translate`移动的是`canvas`的坐标原点，相当与整个`canvas`坐标变换
+
+```javascript
+    function draw() {
+        let canvas = document.getElementById('my-canvas');
+        if (!canvas.getContext) return;
+        let ctx = canvas.getContext("2d");
+        ctx.save() // 保存坐标变换之前的状态
+        ctx.translate(50,50) // 移动canvas坐标原点
+        ctx.fillRect(50,50,200,200)
+
+        ctx.restore() // 恢复已保存在栈中的初始状态坐标位置
+        ctx.strokeStyle='pink'
+        ctx.strokeRect(50,50,200,200)
+    }
+    draw();
+```
+
+![](image/translate_test.png)
+
+### `rotate(angle)`
+
+`rotate(angle)`，旋转坐标轴。
+
+这个方法只接收一个参数：旋转的角度（angle),它是顺时针方向，以**弧度**为单位的值，旋转的中心是`canvas`坐标原点。
+
+![](image/rotate.png)
+
+```javascript
+    function draw() {
+        let canvas = document.getElementById('my-canvas');
+        if (!canvas.getContext) return;
+        let ctx = canvas.getContext("2d");
+        ctx.save() // 保存坐标角度变换之前的状态
+        ctx.rotate(Math.PI/180*30) // rotate接收参数是弧度
+        ctx.fillRect(100,100,50,50)
+        ctx.restore() // 取出从栈中保存的初始化状态 
+        ctx.fillRect(100,100,50,50)
+    }
+    draw();
+```
+
+![](image/rotate_test.png)
+
+
+
+### `scale(x, y)`
+
+`scale(x, y)`，用它来增减图形在 `canvas` 中的像素数目，对形状，位图进行缩小或者放大。
+
+`scale`方法接受两个参数：`x`,`y` 分别是横轴和纵轴的缩放因子，它们都必须是正值。值比`1.0`小表示缩小，比`1.0`大则表示放大，值为`1.0`时什么效果都没有。
+
+默认情况下，`canvas` 的`1`单位就是`1`个像素。举例说，如果我们设置缩放因子是`0.5`，`1`个单位就变成对应`0.5`个像素，这样绘制出来的形状就会是原先的一半。同理，设置为`2.0`时`1`个单位就对应变成了`2`像素，绘制的结果就是图形放大了`2`倍。
+
+```javascript
+    function draw() {
+        let canvas = document.getElementById('my-canvas');
+        if (!canvas.getContext) return;
+        let ctx = canvas.getContext("2d");
+        ctx.fillRect(0,0,100,100)
+        ctx.scale(0.5,0.5) // 缩小到原来的一半
+        ctx.fillStyle='pink'
+        ctx.fillRect(0,0,100,100)
+    }
+    draw();
+```
+
+![](image/scale.png)
+
+### `transform`
+
+`transform(a,b,c,d,e,f)`，变形矩阵，就是将平移 `translate`，缩放`scale`，旋转`rotate`等几种几何变换合为一体，使用矩阵来操作多种几何变换。
+
+**注意：** `canvas`中的变形`transform`针对的不是绘制的图形，而是针对画布本身。
+
+**参数说明**
+
+- `a`水平缩放
+- `b`水平倾斜
+- `c`垂直倾斜
+- `d`垂直缩放
+- `e`水平移动
+- `f`垂直移动
+
+我们把它们放在一个**矩阵**里，就像下面这样：
+
+![](image/Matrix_1.png)
+
+**矩阵的唯一作用就是简化多种几何变换之后新的坐标的计算方式**
+
+```javascript
+    function draw() {
+        let canvas = document.getElementById('my-canvas');
+        if (!canvas.getContext) return;
+        let ctx = canvas.getContext("2d");
+        ctx.fillStyle="orange";
+        ctx.fillRect(50,50,100,50);
+        ctx.transform(1,1,0,1,0,0);
+        ctx.fillStyle="green";
+        ctx.fillRect(50,50,100,50);
+    }
+    draw();
+```
+
+![](image/transform.png)
+
+## 合成`globalCompositeOperation`
+
+想要实现 `Photoshop` 中 `合并图像` 的操作，`Canvas` 提供了属性 `globalCompositeOperation` 用来设置图片混排模式
+
+- **图片混排模式**
+  混排模式可以简单的理解为两个图层按照不同模式，可以组合成不同的结果显示出来，混排模式会用到两个图层：先绘制的图是**目标图(DST)** ，后绘制的图是**源图(SRC)**
+
+`canvas` 提供了 26 种图片混排模式
+
+```javascript
+source-over/
+source-in/
+source-out/
+source-atop/
+destination-over/
+destination-in/
+destination-out/
+destination-atop /
+lighter/
+copy /
+xor /
+multiply
+screen
+overlay
+darken
+lighten
+color-dodge
+color-burn
+hard-light
+soft-light
+difference
+exclusion
+hue
+saturation
+color
+luminosity
+```
+
+- `Canvas globalCompositeOperation` 属性
+
+  `ctx.globalCompositeOperation` 属性用于设定绘制新图形时采用的图形混排模式，它的值必须是上面 `26` 种之一
+
+**语法**
+
+```javascript
+ctx.globalCompositeOperation = type;
+```
+
+### `source-over`
+
+> 这是默认设置，新图像会覆盖在原有图像
+
+```javascript
+    function draw() {
+        let canvas = document.getElementById('my-canvas');
+        if (!canvas.getContext) return;
+        let ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "blue";
+        ctx.fillRect(0, 0, 200, 200);
+        ctx.globalCompositeOperation = "source-over"; //全局合成操作
+        ctx.fillStyle = "red";
+        ctx.fillRect(100, 100, 200, 200);
+    }
+    draw();
+```
+
+![](image/source-over.png)
+
+### `source-in`
+
+>仅仅会出现新图像与原来图像重叠的部分，其他区域都变成透明的。(包括其他的老图像区域也会透明)
+
+![](image/source-in.png)
+
+### `source-out`
+
+>仅仅显示新图像与老图像没有重叠的部分，其余部分全部透明。(老图像也不显示)
+
+![](image/source-out.png)
+
+### `source-atop`
+
+> 新图像仅仅显示与老图像重叠区域。老图像仍然可以显示，新图像在上
+
+![](image/source-atop.png)
+
+### `destination-over`
+
+> 新图像会在老图像下面
+
+![](image/source-over.png)
+
+### `destination-in`
+
+> 仅仅新老图像重叠部分的老图像被显示，其他区域全部透明
+
+![](image/destination-in.png)
+
+### `destination-out`
+
+> 仅仅老图像与新图像没有重叠的部分
+
+![](image/destination-out.png)
+
+### `destination-atop`
+
+> 老图像仅仅仅仅显示重叠部分，新图像会显示在老图像的下面。
+
+![](image/destination-atop.png)
+
+### `lighter`
+
+> 新老图像都显示，但是重叠区域的颜色做加处理。
+
+![](image/lighter.png)
+
+### `copy`
+
+> 只有新图像会被保留，其余的全部被清除(透明)。
+
+![](image/copy.png)
+
+### `xor`
+
+> 重叠部分会变成透明。
+
+![](image/xor.png)
+
+### `darken`
+
+> 保留重叠部分最黑的像素。(每个颜色位进行比较，得到最小的)
+
+```javascript
+blue: "#0000ff"
+red: "#ff0000"
+```
+
+- 所以重叠部分的颜色：`#000000`。
+
+![](image/darken.png)
+
+### `lighten`
+
+> 保证重叠部分最量的像素。(每个颜色位进行比较，得到最大的)
+
+```javascript
+blue: "#0000ff"
+red: "#ff0000"
+```
+
+- 所以重叠部分的颜色：`#ff00ff`。
+
+![](image/lighten.png)
