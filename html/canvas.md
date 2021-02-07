@@ -12,7 +12,7 @@
 
 **替换内容**
 
-由于某些较老的浏览器（尤其是 IE9 之前的 IE 浏览器）或者浏览器不支持 HTML 元素 `<canvas>`，在这些浏览器上你应该总是能展示替代内容。
+由于某些较老的浏览器（尤其是 `IE9` 之前的 IE 浏览器）或者浏览器不支持 HTML 元素 `<canvas>`，在这些浏览器上你应该总是能展示替代内容。
 
 支持 `<canvas>` 的浏览器会只渲染 `<canvas>` 标签，而忽略其中的替代内容。不支持 `<canvas>` 的浏览器则 会直接渲染替代内容。
 
@@ -36,7 +36,7 @@
 
 与 `<img>` 元素不同，`<canvas>` 元素需要结束标签(`</canvas>`)。如果结束标签不存在，则文档的其余部分会被认为是替代内容，将不会显示出来。
 
-### 渲染上下文(Thre Rending Context)
+### 渲染上下文(`Thre Rending Context`)
 
 `<canvas>` 会创建一个固定大小的画布，会公开一个或多个**渲染上下文**(画笔)，使用**渲染上下文**来绘制和处理要展示的内容。
 
@@ -77,7 +77,7 @@ draw()
 
 ## 绘制形状
 
-### 栅格（grid）和坐标空间
+### 栅格（`grid`）和坐标空间
 
 `canvas` 元素默认被网格所覆盖。通常来说网格中的一个单元相当于 `canvas` 元素中的一像素。栅格的起点为左上角，坐标为 (0,0) 。所有元素的位置都相对于原点来定位。所以图中蓝色方形左上角的坐标为距离左边（X 轴）x 像素，距离上边（Y 轴）y 像素，坐标为 (x,y)。
 
@@ -337,13 +337,15 @@ draw();
 
 #### 什么是贝塞尔曲线
 
-*贝塞尔曲线(Bézier curve)*，又称*贝兹曲线或贝济埃曲线*，是应用于二维图形应用程序的数学曲线。
+*贝塞尔曲线(`Bézier curve`)*，又称*贝兹曲线或贝济埃曲线*，是应用于二维图形应用程序的数学曲线。
 
 一般的矢量图形软件通过它来精确画出曲线，贝兹曲线由线段与节点组成，节点是可拖动的支点，线段像可伸缩的皮筋，我们在绘图工具上看到的钢笔工具就是来做这种矢量曲线的。
 
-贝塞尔曲线是计算机图形学中相当重要的参数曲线，在一些比较成熟的位图软件中也有贝塞尔曲线工具如 PhotoShop 等。在 Flash4 中还没有完整的曲线工具，而在 Flash5 里面已经提供出贝塞尔曲线工具。
+贝塞尔曲线是计算机图形学中相当重要的参数曲线，在一些比较成熟的位图软件中也有贝塞尔曲线工具如 `PhotoShop` 等。在 `Flash4` 中还没有完整的曲线工具，而在 `Flash5` 里面已经提供出贝塞尔曲线工具。
 
-贝塞尔曲线于 1962，由法国工程师皮埃尔·贝塞尔（Pierre Bézier）所广泛发表，他运用贝塞尔曲线来为汽车的主体进行设计。贝塞尔曲线最初由Paul de Casteljau 于 1959 年运用 de Casteljau 演算法开发，以稳定数值的方法求出贝兹曲线。
+贝塞尔曲线于 1962，由法国工程师皮埃尔·贝塞尔（`Pierre Bézier`）所广泛发表，他运用贝塞尔曲线来为汽车的主体进行设计。贝塞尔曲线最初由Paul de `Casteljau` 于 1959 年运用 `de Casteljau` 演算法开发，以稳定数值的方法求出贝兹曲线。
+
+[必须要理解掌握的贝塞尔曲线](https://www.jianshu.com/p/0c9b4b681724)
 
 - 一次贝塞尔曲线是一条直线
 
@@ -451,7 +453,7 @@ draw();
 - 2. 默认情况下，线条和填充颜色都是黑色。
 - 3. 一旦设置了`strokeStyle `或者`fillStyle`的值，那么这个新值就会成为新绘制的图形的默认值。如果你要给每个图形上不同的颜色，你需要重新设置 `fillStyle `或 `strokeStyle `的值。
 
-### 填充颜色（fillStyle）
+### 填充颜色（`fillStyle`）
 
 ```javascript
 function draw(){
@@ -471,7 +473,7 @@ draw();
 
 ![](image/fillStyle.png)
 
-### 轮廓颜色（strokeStyle ）
+### 轮廓颜色（`strokeStyle` ）
 
 ```javascript
 function draw(){
@@ -497,9 +499,9 @@ draw();
 
  `globalAlpha`属性在需要绘制大量拥有相同透明度的图形时候相当高效。一般情况下使用`rgba()`设置透明度更加好一些。
 
-### 线条样式（lineStyle）
+### 线条样式（`lineStyle`）
 
-#### 线宽（lineWidth ）
+#### 线宽（`lineWidth` ）
 
 线宽。只能是正值。默认是 1.0。
 
@@ -522,7 +524,7 @@ draw();
 
 ![](image/lineWidth.png)
 
-#### 线条末端样式（lineCap）
+#### 线条末端样式（`lineCap`）
 
 `lineCap=type`，`type`总共有三个值：
 
@@ -561,7 +563,7 @@ draw();
 
 ![](image/lineCap.png)
 
-#### 线条间接合处的样式（lineJoin ）
+#### 线条间接合处的样式（`lineJoin` ）
 
 同一个 path 内，设定线条与线条间接合处的样式。`lineJoin =type`，`type`总共有三个值：
 
@@ -657,7 +659,7 @@ draw();
 
 ![](image/canvas_text.png)
 
-## 绘制图片（drawImage）
+## 绘制图片（`drawImage`）
 
 ### 由零开始创建图片
 
@@ -1409,7 +1411,7 @@ console.log(ctx.createImageData(1,1));
 
 `ctx.getImageData( sx , sy , sw , sh)` 用户获取画布上指定区域的图像数据
 
-```
+```javascript
 ImageData ctx.getImageData(sx, sy, sw, sh);
 ```
 
@@ -1523,7 +1525,7 @@ ctx.putImageData(imagedata, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight);
 **注意：**
 
 1. 如果任何一个参数设置成无穷大，则会抛出此错误 `NotSupportedError`
-2. 如果 imageData 不是一个完整的图像数据，会抛出错误 `InvalidStateError`
+2. 如果 `imageData` 不是一个完整的图像数据，会抛出错误 `InvalidStateError`
 
 ```javascript
     function draw() {
